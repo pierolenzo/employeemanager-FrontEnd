@@ -12,7 +12,7 @@ import { NgForm } from '@angular/forms';
 export class AppComponent implements OnInit {
 
   public employees!: Employee[];
-  public editEmployee!: Employee;
+  public editEmployee!: Employee | undefined;
   public deleteEmployee!: Employee;
 
   constructor(private employeeService: EmployeeService) { }
@@ -38,6 +38,7 @@ export class AppComponent implements OnInit {
       (response: Employee) => {
         console.log(response);
         this.getEmployees();
+        addForm.reset();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -45,15 +46,24 @@ export class AppComponent implements OnInit {
     )
   }
 
-  public onUpdateEmployee(p:any):void {
-
+  public onUpdateEmployee(employee: Employee):void {
+    document.getElementById('add-employee-form')?.click();
+    this.employeeService.updateEmployees(employee).subscribe(
+      (response: Employee) => {
+        console.log(response);
+        this.getEmployees();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      },
+    )
   }
 
   public onDeleteEmployee(p:any): void {
 
   }
 
-  public onOpenModal (mode: string): void {
+  public onOpenModal (mode: string, employee?: Employee): void {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
 
@@ -64,6 +74,7 @@ export class AppComponent implements OnInit {
       button.setAttribute('data-bs-target', '#addEmployeeModal');
     }
     if (mode === 'edit') {
+      this.editEmployee = employee;
       button.setAttribute('data-bs-target', '#updateEmployeeModal');
     }
     if (mode === 'delete') {
