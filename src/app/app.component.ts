@@ -2,6 +2,7 @@ import { EmployeeService } from './employee.service';
 import { Employee } from './employee';
 import { Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class AppComponent implements OnInit {
 
   public employees!: Employee[];
+  public editEmployee!: Employee;
+  public deleteEmployee!: Employee;
 
   constructor(private employeeService: EmployeeService) { }
 
@@ -27,6 +30,40 @@ export class AppComponent implements OnInit {
         alert(error.message);
       }
     )
+  }
+
+  public onAddEmployee(addForm: NgForm): void {
+
+  }
+
+  public onUpdateEmployee(p:any):void {
+
+  }
+
+  public onDeleteEmployee(p:any): void {
+
+  }
+
+  public onOpenModal (mode: string): void {
+    const container = document.getElementById('main-container');
+    const button = document.createElement('button');
+
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-bs-toggle', 'modal');
+    if (mode === 'add') {
+      button.setAttribute('data-bs-target', '#addEmployeeModal');
+    }
+    if (mode === 'edit') {
+      button.setAttribute('data-bs-target', '#updateEmployeeModal');
+    }
+    if (mode === 'delete') {
+      button.setAttribute('data-bs-target', '#deleteEmployeeModal');
+    }
+
+    container?.appendChild(button);
+    button.click();
+
   }
 
 }
