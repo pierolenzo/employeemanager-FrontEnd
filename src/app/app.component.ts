@@ -7,12 +7,11 @@ import { NgForm } from '@angular/forms';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  styleUrls: ['./app.component.sass'],
 })
 export class AppComponent implements OnInit {
-
   public employees!: Employee[];
-  public editEmployee!: Employee | undefined;
+  public editEmployee!: Employee;
   public deleteEmployee!: Employee;
 
   constructor(private employeeService: EmployeeService) { }
@@ -29,7 +28,7 @@ export class AppComponent implements OnInit {
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
-    )
+    );
   }
 
   public onAddEmployee(addForm: NgForm): void {
@@ -42,11 +41,11 @@ export class AppComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
-      },
-    )
+      }
+    );
   }
 
-  public onUpdateEmployee(employee: Employee):void {
+  public onUpdateEmployee(employee: Employee): void {
     document.getElementById('add-employee-form')?.click();
     this.employeeService.updateEmployees(employee).subscribe(
       (response: Employee) => {
@@ -55,15 +54,40 @@ export class AppComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
+      }
+    );
+  }
+
+  public onDeleteEmployee(employeeId: number): void {
+    this.employeeService.deleteEmployees(employeeId).subscribe(
+      (response: void) => {
+        console.log(response);
+        this.getEmployees();
       },
-    )
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
   }
 
-  public onDeleteEmployee(p:any): void {
+  public searchEmployee(key: string) {
+    const results: Employee[] = [];
+    for (const employee of this.employees) {
+      if(employee.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || employee.email.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || employee.phone.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || employee.jobTitle.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+        results.push(employee);
+      }
+    }
+    this.employees = results;
+    if (results.length === 0 || !key) {
+      this.getEmployees();
+    }
 
   }
 
-  public onOpenModal (mode: string, employee?: Employee): void {
+  public onOpenModal(employee: Employee, mode: string): void {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
 
@@ -78,12 +102,11 @@ export class AppComponent implements OnInit {
       button.setAttribute('data-bs-target', '#updateEmployeeModal');
     }
     if (mode === 'delete') {
+      this.deleteEmployee = employee;
       button.setAttribute('data-bs-target', '#deleteEmployeeModal');
     }
 
     container?.appendChild(button);
     button.click();
-
   }
-
 }

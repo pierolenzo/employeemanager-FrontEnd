@@ -15,13 +15,24 @@
     <div class="collapse navbar-collapse" id="navbarColor02">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" (click)="onOpenModal('add')">Add Employee <span class="sr-only">(current)</span></a
-          >
+          <a class="nav-link"
+            (click)="onOpenModal({ id:0,
+                                    name:'',
+                                    email:'',
+                                    jobTitle:'',
+                                    phone:'',
+                                    imageUrl:'',
+                                    employeeCode:''}, 'add')">
+            Add Employee
+            <span class="sr-only">(current)</span>
+          </a>
         </li>
       </ul>
       <form class="form-d-flex">
         <input
           type="search"
+          (ngModelChange)="searchEmployee(key.value)"
+          #key="ngModel" ngModel
           name="key"
           id="searchName"
           class="form-control me-2"
@@ -98,7 +109,7 @@
           </ul>
           <div class="btn-group btn-group-sm">
             <a
-            (click)="onOpenModal('edit', employee)"
+            (click)="onOpenModal(employee, 'edit')"
               class="btn btn-primary tooltips"
               data-placement="top"
               data-bs-toggle="tooltip"
@@ -106,7 +117,7 @@
               ><i class="fa fa-pencil"></i>
             </a>
             <a
-            (click)="onOpenModal('delete', employee)"
+            (click)="onOpenModal(employee, 'delete')"
               class="btn btn-secondary tooltips"
               data-placement="top"
               data-bs-toggle="tooltip"
@@ -220,7 +231,7 @@
            <p>Are you sure you want to delete employee {{deleteEmployee?.name}}?</p>
            <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-              <button (click)="onDeleteEmployee(deleteEmployee?.id)" class="btn btn-danger" data-bs-dismiss="modal">Yes</button>
+              <button (click)="onDeleteEmployee(deleteEmployee.id)" class="btn btn-danger" data-bs-dismiss="modal">Yes</button>
            </div>
         </div>
      </div>
